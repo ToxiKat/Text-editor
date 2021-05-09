@@ -13,9 +13,7 @@ def run():
     save()
     global open_status_name
     if open_status_name:
-        # file_to_exec="\""+str(open_status_name)+"\""
         command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause \""
-        # command = ["start","cmd","/c","\"","python",file_to_exec,"&&","echo.","&&","pause","\""]
         subprocess.run(command,shell=True)
 
 def dark_theme():
@@ -54,12 +52,12 @@ def font():
 def kill():
     root.destroy()
 
-def new_file():
+def new_file(e):
     global open_status_name
     open_status_name=False
     clearall()
 
-def opn():
+def opn(e):
     text.delete(1.0 , END)
     filename=askopenfilename(title="Open Python File",filetypes=[('Python Files','*.py *.pyw')])
     file = open(filename , 'r')
@@ -69,7 +67,7 @@ def opn():
         global open_status_name
         open_status_name=filename
 
-def save():
+def save(e):
     global open_status_name
     if open_status_name:
         alltext = text.get(1.0,END)
@@ -124,14 +122,15 @@ menu = Menu(root)
 filemenu = Menu(root,tearoff=0)
 root.config(menu = menu)
 menu.add_cascade(label="File", menu=filemenu)
-filemenu.add_command(label="New File", command=new_file)
-filemenu.add_command(label="Open", command=opn)
-filemenu.add_command(label="Save", command=save)
+filemenu.add_command(label="New File", command=lambda: new_file(False))
+root.bind('<Control-n>',new_file)
+filemenu.add_command(label="Open", command=lambda: opn(False))
+root.bind('<Control-o>',opn)
+filemenu.add_command(label="Save", command=lambda: save(False))
+root.bind('<Control-s>',save)
 filemenu.add_command(label="Save as", command=saveas)
 filemenu.add_separator()
 filemenu.add_command(label="Close", command=kill)
-filemenu.add_separator()
-# filemenu.add_command(label="Run", command=run)
 
 modmenu = Menu(root,tearoff=0)
 modmenu.add_command(label="cut",command=cut)
@@ -140,10 +139,6 @@ modmenu.add_command(label="paste", command=paste)
 modmenu.add_command(label = "Clear", command = clear)
 modmenu.add_command(label = "Clear all", command = clearall)
 modmenu.add_command(label="Run", command=run)
-
-execmenu = Menu(menu,tearoff=0)
-menu.add_cascade(label="Execute",menu=execmenu)
-execmenu.add_command(label="Execute",command=run)
 
 formatmenu = Menu(menu,tearoff=0)
 menu.add_cascade(label="Format",menu = formatmenu)
@@ -158,7 +153,11 @@ formatmenu.add_radiobutton(label='Bold',command=bold)
 formatmenu.add_radiobutton(label='Underline',command=underline)
 formatmenu.add_radiobutton(label='italic',command=italic)
 
-text = Text(root, height=30, width=60, font = ("Hurmit NF", 10))
+execmenu = Menu(menu,tearoff=0)
+menu.add_cascade(label="Execute",menu=execmenu)
+execmenu.add_command(label="Execute",command=run)
+
+text = Text(root, height=30, width=60, font = ("Hurmit NF", 10),undo=True)
 dark_theme()
 
 scroll = Scrollbar(root, command=text.yview)
