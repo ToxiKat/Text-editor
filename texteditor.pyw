@@ -9,11 +9,18 @@ import subprocess
 global open_status_name
 open_status_name = False
 
+def test_code():
+    code=text.selection_get()
+    open("testing-code.py", 'w').write(code) 
+    command = "start cmd /c \" python testing-code.py && echo. && pause || echo. && pause \""
+    subprocess.run(command,shell=True)
+    open("testing-code.py", 'w').write("") 
+
 def run():
-    save()
+    save(False)
     global open_status_name
     if open_status_name:
-        command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause \""
+        command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause || echo. && pause \""
         subprocess.run(command,shell=True)
 
 def dark_theme():
@@ -31,18 +38,6 @@ def text_right_click(event):
         modmenu.tk_popup(event.x_root, event.y_root)
     finally:
         modmenu.grab_release()
-
-def normal():
-    text.config(font = ("Hurmit NF", 10))
-
-def bold():
-    text.config(font = ("Hurmit NF", 10, "bold"))
-
-def underline():
-    text.config(font = ("Hurmit NF", 10, "underline"))
-
-def italic():
-    text.config(font = ("Hurmit NF",10,"italic"))
 
 def font():
     (triple,color) = askcolor()
@@ -139,6 +134,7 @@ modmenu.add_command(label="paste", command=paste)
 modmenu.add_command(label = "Clear", command = clear)
 modmenu.add_command(label = "Clear all", command = clearall)
 modmenu.add_command(label="Run", command=run)
+modmenu.add_command(label="Test Code", command=test_code)
 
 formatmenu = Menu(menu,tearoff=0)
 menu.add_cascade(label="Format",menu = formatmenu)
@@ -147,17 +143,14 @@ formatmenu.add_command(label="background", command=background)
 formatmenu.add_separator()
 formatmenu.add_command(label="Dark Theme",command=dark_theme)
 formatmenu.add_command(label="Light Theme",command=light_theme)
-formatmenu.add_separator()
-formatmenu.add_radiobutton(label='Normal',command=normal)
-formatmenu.add_radiobutton(label='Bold',command=bold)
-formatmenu.add_radiobutton(label='Underline',command=underline)
-formatmenu.add_radiobutton(label='italic',command=italic)
 
 execmenu = Menu(menu,tearoff=0)
 menu.add_cascade(label="Execute",menu=execmenu)
 execmenu.add_command(label="Execute",command=run)
+execmenu.add_command(label="Test Code",command=test_code)
 
-text = Text(root, height=30, width=60, font = ("Hurmit NF", 10),undo=True)
+# text = Text(root, height=30, width=60, font = ("Hurmit NF", 10),undo=True)
+text = Text(root, height=30, width=60, font = ("Consolas", 10),undo=True)
 dark_theme()
 
 scroll = Scrollbar(root, command=text.yview)
