@@ -9,18 +9,60 @@ import subprocess
 global open_status_name
 open_status_name = False
 
-def test_code():
-    code=text.selection_get()
-    open("testing-code.py", 'w').write(code) 
-    command = "start cmd /c \" python testing-code.py && echo. && pause || echo. && pause \""
-    subprocess.run(command,shell=True)
-    open("testing-code.py", 'w').write("") 
+def test_code(interactive_mode:bool):
+    if text.tag_ranges("sel"):
+        first=text.index(SEL_FIRST)
+        first=first+" linestart"
+        last=text.index(SEL_LAST)
+        last=last+" lineend"
+    else:
+        curpos=text.index(INSERT)
+        first=curpos+" linestart"
+        last=curpos+" lineend"
 
-def run():
+    code=text.get(first,last)
+    open("testing-code.py", 'w').write(code) 
+    if interactive_mode:
+        command="start cmd /c \" python -i testing-code.py \""
+    else:
+        command = "start cmd /c \" python testing-code.py && echo. && pause || echo. && pause \""
+    subprocess.run(command,shell=True) 
+
+def comment():
+    if text.tag_ranges("sel"):
+        first=text.index(SEL_FIRST)
+        first=int(float(first))
+        last=text.index(SEL_LAST)
+        last=int(float(last))
+    else:
+        curpos=text.index(INSERT)
+        first=int(float(curpos))
+        last=int(float(curpos))
+    is_commented=True
+    for i in range(first,last+1):
+        pos1=str(i)+".0"
+        pos2=str(i)+".1"
+        a=text.get(pos1,pos2)
+        if a!='#':
+            is_commented=False
+    if is_commented:
+        for i in range(first,last+1):
+            pos1=str(i)+".0"
+            pos2=str(i)+".1"
+            text.delete(pos1,pos2)
+    else:
+        for i in range(first,last+1):
+            pos=str(i)+".0"
+            text.insert(pos,"#")
+
+def run(interactive:bool):
     save(False)
     global open_status_name
     if open_status_name:
-        command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause || echo. && pause \""
+        if interactive:
+            command="start cmd /c \" python -i \""+open_status_name+"\" \""
+        else:
+            command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause || echo. && pause \""
         subprocess.run(command,shell=True)
 
 def dark_theme():
@@ -131,10 +173,13 @@ modmenu = Menu(root,tearoff=0)
 modmenu.add_command(label="cut",command=cut)
 modmenu.add_command(label="Copy", command = copy)
 modmenu.add_command(label="paste", command=paste)
+modmenu.add_command(label="Comment", command=comment)
 modmenu.add_command(label = "Clear", command = clear)
 modmenu.add_command(label = "Clear all", command = clearall)
-modmenu.add_command(label="Run", command=run)
-modmenu.add_command(label="Test Code", command=test_code)
+modmenu.add_command(label="Run", command=lambda: run(False))
+modmenu.add_command(label="Run interactive", command=lambda: run(True))
+modmenu.add_command(label="Test Code", command=lambda: test_code(False))
+modmenu.add_command(label="Test interactive", command=lambda: test_code(True))
 
 formatmenu = Menu(menu,tearoff=0)
 menu.add_cascade(label="Format",menu = formatmenu)
@@ -145,9 +190,12 @@ formatmenu.add_command(label="Dark Theme",command=dark_theme)
 formatmenu.add_command(label="Light Theme",command=light_theme)
 
 execmenu = Menu(menu,tearoff=0)
-menu.add_cascade(label="Execute",menu=execmenu)
-execmenu.add_command(label="Execute",command=run)
-execmenu.add_command(label="Test Code",command=test_code)
+menu.add_cascade(label="Run",menu=execmenu)
+execmenu.add_command(label="Run",command=lambda: run(False))
+execmenu.add_command(label="Run interactive",command=lambda: run(True))
+execmenu.add_separator()
+execmenu.add_command(label="Test Code",command=lambda: test_code(False))
+execmenu.add_command(label="Test interactive",command=lambda: test_code(True))
 
 # text = Text(root, height=30, width=60, font = ("Hurmit NF", 10),undo=True)
 text = Text(root, height=30, width=60, font = ("Consolas", 10),undo=True)
