@@ -13,8 +13,8 @@ def any(name, alternates):
 
 def ty():
 	kw = r"\b" + any("KEYWORD", keyword.kwlist) + r"\b"
-	builtinlist = [str(name) for name in dir(builtins)
-										if not name.startswith('_')]
+	builtinlist = [str(name) for name in dir(builtins)]
+										# if not name.startswith('_')]
 	# builtinlist.remove('print')
 	builtin = r"([^.'\"\\#]\b|^)" + any("BUILTIN", builtinlist) + r"\b"
 	comment = any("COMMENT", [r"#[^\n]*"])
@@ -40,21 +40,21 @@ def _coordinate(start,end,string):
 	lcol=len(lcolsplitlines)+1# Ending Column
 	return '{}.{}'.format(srow, scol),'{}.{}'.format(lrow, lcol)#, (lrow, lcol)
 
-def coordinate(pattern, string,txt):
-	line=string.splitlines()
-	start=string.find(pattern)  # Here Pattern Word Start
-	end=start+len(pattern) # Here Pattern word End
-	srow=string[:start].count('\n')+1 # starting row
-	scolsplitlines=string[:start].split('\n')
-	if len(scolsplitlines)!=0:
-		scolsplitlines=scolsplitlines[len(scolsplitlines)-1]
-	scol=len(scolsplitlines)# Ending Column
-	lrow=string[:end+1].count('\n')+1
-	lcolsplitlines=string[:end].split('\n')
-	if len(lcolsplitlines)!=0:
-		lcolsplitlines=lcolsplitlines[len(lcolsplitlines)-1]
-	lcol=len(lcolsplitlines)# Ending Column
-	return '{}.{}'.format(srow, scol),'{}.{}'.format(lrow, lcol)#, (lrow, lcol)
+# def coordinate(pattern, string,txt):
+# 	line=string.splitlines()
+# 	start=string.find(pattern)  # Here Pattern Word Start
+# 	end=start+len(pattern) # Here Pattern word End
+# 	srow=string[:start].count('\n')+1 # starting row
+# 	scolsplitlines=string[:start].split('\n')
+# 	if len(scolsplitlines)!=0:
+# 		scolsplitlines=scolsplitlines[len(scolsplitlines)-1]
+# 	scol=len(scolsplitlines)# Ending Column
+# 	lrow=string[:end+1].count('\n')+1
+# 	lcolsplitlines=string[:end].split('\n')
+# 	if len(lcolsplitlines)!=0:
+# 		lcolsplitlines=lcolsplitlines[len(lcolsplitlines)-1]
+# 	lcol=len(lcolsplitlines)# Ending Column
+# 	return '{}.{}'.format(srow, scol),'{}.{}'.format(lrow, lcol)#, (lrow, lcol)
 
 def check(k={}):
 	if k['COMMENT']!=None:

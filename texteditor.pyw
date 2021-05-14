@@ -68,6 +68,10 @@ def run(interactive:bool):
 			command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause || echo. && pause \""
 		subprocess.run(command,shell=True)
 
+def tab(arg):
+    text.insert(INSERT, "    ")
+    return 'break'
+
 def dark_theme():
 	text.config(insertbackground="cyan")
 	text.config(background='#2a2a2a')
@@ -94,7 +98,8 @@ def font():
 	   text.config(foreground=color)
 
 def kill():
-	root.destroy()
+    if messagebox.askokcancel("Quit", "Do you want to quit?\n(any unsaved data will be lost!)",icon="warning"):
+        root.destroy()
 
 def new_file(e):
 	global open_status_name
@@ -192,11 +197,15 @@ modmenu = Menu(root,tearoff=0)
 modmenu.add_command(label="cut",command=cut)
 modmenu.add_command(label="Copy", command = copy)
 modmenu.add_command(label="paste", command=paste)
+modmenu.add_separator()
 modmenu.add_command(label="Comment", command=lambda: comment(False))
+modmenu.add_separator()
 modmenu.add_command(label = "Clear", command = clear)
 modmenu.add_command(label = "Clear all", command = clearall)
+modmenu.add_separator()
 modmenu.add_command(label="Run", command=lambda: run(False))
 modmenu.add_command(label="Run interactive", command=lambda: run(True))
+modmenu.add_separator()
 modmenu.add_command(label="Test Code", command=lambda: test_code(False))
 modmenu.add_command(label="Test interactive", command=lambda: test_code(True))
 
@@ -220,7 +229,7 @@ execmenu.add_command(label="Test Code",command=lambda: test_code(False))
 execmenu.add_command(label="Test interactive",command=lambda: test_code(True))
 
 # text = Text(root, height=30, width=60, font = ("Hurmit NF", 10),undo=True)
-text = Text(root, height=30, width=60, font = ("Consolas", 10),undo=True)
+text = Text(root, height=30, width=60, font = ("Consolas", 13),undo=True)
 dark_theme()
 add_syntax()
 scroll = Scrollbar(root, command=text.yview)
@@ -230,5 +239,7 @@ scroll.pack(side=RIGHT, fill=Y)
 text.pack(side=LEFT, expand=True, fill=BOTH)
 text.bind("<Button-3>", text_right_click)
 text.bind('<Control-slash>',comment)
+text.bind("<Tab>", tab)
 
+root.protocol("WM_DELETE_WINDOW", kill)
 root.mainloop()
