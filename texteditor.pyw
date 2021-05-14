@@ -5,6 +5,7 @@ from tkinter import colorchooser
 from tkinter.colorchooser import askcolor
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 import subprocess
+import syntax_highlighter
 
 global open_status_name
 open_status_name = False
@@ -207,5 +208,5 @@ text.config(yscrollcommand=scroll.set)
 scroll.pack(side=RIGHT, fill=Y)
 text.pack(side=LEFT, expand=True, fill=BOTH)
 text.bind("<Button-3>", text_right_click)
-
+coloring=syntax_highlighter.ColorLight(txtbox=text)
 root.mainloop()
