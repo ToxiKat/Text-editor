@@ -1,0 +1,145 @@
+{
+	"monokai(default)":[
+		{
+			"background": "#272822",
+			"foreground": "#f8f8f2",
+			"selectbackground": "#49483e",
+			"insertbackground": "#00ffff"
+		},
+		{
+			"Token.Comment":                   "#75715e",
+			"Token.Comment.Multiline":         "#75715e",
+			"Token.Comment.Preproc":           "#75715e",
+			"Token.Comment.Single":            "#75715e",
+			"Token.Comment.Special":           "#75715e",
+
+			"Token.Keyword":                   "#66d9ef",
+			"Token.Keyword.Constant":          "#66d9ef",
+			"Token.Keyword.Declaration":       "#66d9ef",
+			"Token.Keyword.Namespace":         "#f92672",
+			"Token.Keyword.Pseudo":            "#66d9ef",
+			"Token.Keyword.Reserved":          "#66d9ef",
+			"Token.Keyword.Type":              "#66d9ef",
+
+			"Token.Operator":                  "#f92672",
+			"Token.Operator.Word":             "#f92672",
+
+			"Token.Punctuation":               "#f8f8f2",
+
+			"Token.Name":                      "#f8f8f2",
+			"Token.Name.Attribute":            "#a6e22e",
+			"Token.Name.Builtin":              "#f8f8f2",
+			"Token.Name.Builtin.Pseudo":       "#f8f8f2",
+			"Token.Name.Class":                "#a6e22e",
+			"Token.Name.Constant":             "#66d9ef",
+			"Token.Name.Decorator":            "#a6e22e",
+			"Token.Name.Entity":               "#f8f8f2",
+			"Token.Name.Exception":            "#a6e22e",
+			"Token.Name.Function":             "#a6e22e",
+			"Token.Name.Property":             "#f8f8f2",
+			"Token.Name.Label":                "#f8f8f2",
+			"Token.Name.Namespace":            "#f8f8f2",
+			"Token.Name.Other":                "#a6e22e",
+			"Token.Name.Tag":                  "#f92672",
+			"Token.Name.Variable":             "#f8f8f2",
+			"Token.Name.Variable.Class":       "#f8f8f2",
+			"Token.Name.Variable.Global":      "#f8f8f2",
+			"Token.Name.Variable.Instance":    "#f8f8f2",
+
+			"Token.Literal.Number":                    "#ae81ff",
+			"Token.Literal.Number.Float":              "#ae81ff",
+			"Token.Literal.Number.Hex":                "#ae81ff",
+			"Token.Literal.Number.Integer":            "#ae81ff",
+			"Token.Literal.Number.Integer.Long":       "#ae81ff",
+			"Token.Literal.Number.Oct":                "#ae81ff",
+
+			"Token.Literal":                   "#ae81ff",
+			"Token.Literal.Date":              "#e6db74",
+
+			"Token.Literal.String":                    "#e6db74",
+			"Token.Literal.String.Backtick":           "#e6db74",
+			"Token.Literal.String.Char":               "#e6db74",
+			"Token.Literal.String.Doc":                "#e6db74",
+			"Token.Literal.String.Double":             "#e6db74",
+			"Token.Literal.String.Escape":             "#ae81ff",
+			"Token.Literal.String.Heredoc":            "#e6db74",
+			"Token.Literal.String.Interpol":           "#e6db74",
+			"Token.Literal.String.Other":              "#e6db74",
+			"Token.Literal.String.Regex":              "#e6db74",
+			"Token.Literal.String.Single":             "#e6db74",
+			"Token.Literal.String.Symbol":             "#e6db74"
+		}
+	],
+
+	"default light":[
+		{
+			"background": "#f8f8f8",
+			"foreground": "#000000",
+			"selectbackground": "#49483e",
+			"insertbackground": "#000000"
+		},
+		{
+			"Token.Comment":                   "#408080",
+			"Token.Comment.Multiline":         "#408080",
+			"Token.Comment.Preproc":           "#BC7A00",
+			"Token.Comment.Single":            "#408080",
+			"Token.Comment.Special":           "#408080",
+
+			"Token.Keyword":                   "#008000",
+			"Token.Keyword.Constant":          "#008000",
+			"Token.Keyword.Declaration":       "#008000",
+			"Token.Keyword.Namespace":         "#008000",
+			"Token.Keyword.Pseudo":            "#008000",
+			"Token.Keyword.Reserved":          "#008000",
+			"Token.Keyword.Type":              "#B00040",
+
+			"Token.Operator":                  "#666666",
+			"Token.Operator.Word":             "#AA22FF",
+
+			"Token.Punctuation":               "#000000",
+
+			"Token.Name":                      "#000000",
+			"Token.Name.Attribute":            "#7D9029",
+			"Token.Name.Builtin":              "#008000",
+			"Token.Name.Builtin.Pseudo":       "#000000",
+			"Token.Name.Class":                "#0000FF",
+			"Token.Name.Constant":             "#880000",
+			"Token.Name.Decorator":            "#AA22FF",
+			"Token.Name.Entity":               "#999999",
+			"Token.Name.Exception":            "#D2413A",
+			"Token.Name.Function":             "#0000FF",
+			"Token.Name.Property":             "#000000",
+			"Token.Name.Label":                "#A0A000",
+			"Token.Name.Namespace":            "#0000FF",
+			"Token.Name.Other":                "#000000",
+			"Token.Name.Tag":                  "#008000",
+			"Token.Name.Variable":             "#19177C",
+			"Token.Name.Variable.Class":       "#000000",
+			"Token.Name.Variable.Global":      "#000000",
+			"Token.Name.Variable.Instance":    "#000000",
+
+			"Token.Literal.Number":                    "#666666",
+			"Token.Literal.Number.Float":              "#666666",
+			"Token.Literal.Number.Hex":                "#666666",
+			"Token.Literal.Number.Integer":            "#666666",
+			"Token.Literal.Number.Integer.Long":       "#666666",
+			"Token.Literal.Number.Oct":                "#666666",
+
+			"Token.Literal":                   "#000000",
+			"Token.Literal.Date":              "#000000",
+
+			"Token.Literal.String":                    "#BA2121",
+			"Token.Literal.String.Backtick":           "#BA2121",
+			"Token.Literal.String.Char":               "#BA2121",
+			"Token.Literal.String.Doc":                "#BA2121",
+			"Token.Literal.String.Double":             "#BA2121",
+			"Token.Literal.String.Escape":             "#BB6622",
+			"Token.Literal.String.Heredoc":            "#BA2121",
+			"Token.Literal.String.Interpol":           "#BB6688",
+			"Token.Literal.String.Other":              "#008000",
+			"Token.Literal.String.Regex":              "#BB6688",
+			"Token.Literal.String.Single":             "#BA2121",
+			"Token.Literal.String.Symbol":             "#19177C"
+		}
+	]
+}

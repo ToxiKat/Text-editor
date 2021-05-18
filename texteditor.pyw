@@ -1,16 +1,14 @@
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
-from tkinter import colorchooser
-from tkinter.colorchooser import askcolor
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 import subprocess
-import syntax_highlighter
+import graphics
 
-global open_status_name
+global open_status_name,curtheme,syntax,syntax_enabled,bindvar
+syntax_enabled=False
 open_status_name = False
-global curtheme
-curtheme='dark'
+
 def test_code(interactive_mode:bool):
 	if text.tag_ranges("sel"):
 		first=text.index(SEL_FIRST)
@@ -72,30 +70,12 @@ def tab(arg):
     text.insert(INSERT, "    ")
     return 'break'
 
-def dark_theme():
-	text.config(insertbackground="cyan")
-	text.config(background='#2a2a2a')
-	text.config(foreground='#ffffff')
-	global curtheme
-	curtheme='dark'
-
-def light_theme():
-	text.config(insertbackground="black")
-	text.config(background='#ffffff')
-	text.config(foreground='#000000')
-	global curtheme
-	curtheme='light'
-
 def text_right_click(event):
 	try:
 		modmenu.tk_popup(event.x_root, event.y_root)
 	finally:
 		modmenu.grab_release()
 
-def font():
-	(triple,color) = askcolor()
-	if color:
-	   text.config(foreground=color)
 
 def kill():
     if messagebox.askokcancel("Quit", "Do you want to quit?\n(any unsaved data will be lost!)",icon="warning"):
@@ -115,6 +95,9 @@ def opn(e):
 		text.insert(INSERT,txt)
 		global open_status_name
 		open_status_name=filename
+		if syntax_enabled:
+			rem_syntax()
+			add_syntax()
 
 def save(e):
 	global open_status_name
@@ -135,6 +118,18 @@ def saveas():
 		text.insert(INSERT,txt)
 		global open_status_name
 		open_status_name=filename
+		if syntax_enabled:
+			rem_syntax()
+			add_syntax()
+
+def change_theme(theme_name):
+	global curtheme,syntax,syntax_enabled
+	curtheme=theme_name
+	bgrnd,syntax=graphics.read_themes(theme_name)
+	graphics.apply_theme(bgrnd,text)
+	if syntax_enabled:
+		rem_syntax()
+		add_syntax()
 
 def cut():
 	copy()
@@ -158,21 +153,21 @@ def clear():
 def clearall():
 	text.delete(1.0 , END)
 
-def background():
-	(triple,color) = askcolor()
-	if color:
-	   text.config(background=color)
-
 def add_syntax():
-	syntax_highlighter.start(txtbox=text)
+	global syntax_enabled,syntax,bindvar
+	mysyn=syntax
+	bindvar=graphics.enable_syntax(root,text,mysyn)
+	syntax_enabled=True
+	pass
 
 def rem_syntax():
-	syntax_highlighter.stop()
-	# global curtheme
-	# if curtheme=='dark':
-	# 	text.config(foreground='#ffffff')
-	# else:
-	# 	text.config(foreground='#000000')
+	global syntax_enabled
+	if syntax_enabled:
+		global bindvar
+		bindingvar=bindvar
+		graphics.disable_syntax(root,text,bindingvar)
+		syntax_enabled=False
+	pass
 
 
 root = Tk()
@@ -211,11 +206,11 @@ modmenu.add_command(label="Test interactive", command=lambda: test_code(True))
 
 formatmenu = Menu(menu,tearoff=0)
 menu.add_cascade(label="Format",menu = formatmenu)
-formatmenu.add_cascade(label="font", command = font)
-formatmenu.add_command(label="background", command=background)
-formatmenu.add_separator()
-formatmenu.add_command(label="Dark Theme",command=dark_theme)
-formatmenu.add_command(label="Light Theme",command=light_theme)
+# formatmenu.add_command(label="Dark Theme",command=dark_theme)
+# formatmenu.add_command(label="Light Theme",command=light_theme)
+theme_names=graphics.all_themes()
+for i in theme_names:
+	formatmenu.add_command(label=i,command= lambda i=i: change_theme(i))
 formatmenu.add_separator()
 formatmenu.add_command(label="syntax Highlighting",command=add_syntax)
 formatmenu.add_command(label="No syntax Highlighting",command=rem_syntax)
@@ -229,13 +224,17 @@ execmenu.add_command(label="Test Code",command=lambda: test_code(False))
 execmenu.add_command(label="Test interactive",command=lambda: test_code(True))
 
 # text = Text(root, height=30, width=60, font = ("Hurmit NF", 10),undo=True)
-text = Text(root, height=30, width=60, font = ("Consolas", 13),undo=True)
-dark_theme()
+text = Text(root, height=30, width=60, font = ("Consolas", 13),undo=True,padx=10,pady=10,wrap='none')
+change_theme(theme_names[0])
 add_syntax()
-scroll = Scrollbar(root, command=text.yview)
-scroll.config(command=text.yview)                  
-text.config(yscrollcommand=scroll.set)           
-scroll.pack(side=RIGHT, fill=Y)
+# dark_theme()
+# add_syntax()
+scrolly = Scrollbar(root, command=text.yview)
+scrollx = Scrollbar(root, command=text.xview, orient=HORIZONTAL)                 
+text.config(yscrollcommand=scrolly.set)
+text.config(xscrollcommand=scrollx.set)           
+scrolly.pack(side=RIGHT, fill=Y)
+scrollx.pack(side=BOTTOM, fill=X)
 text.pack(side=LEFT, expand=True, fill=BOTH)
 text.bind("<Button-3>", text_right_click)
 text.bind('<Control-slash>',comment)
