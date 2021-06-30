@@ -1,13 +1,19 @@
+#!/usr/bin/python3
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 import subprocess
+import platform
 import graphics
 
 global open_status_name,curtheme,syntax,syntax_enabled,bindvar
 syntax_enabled=False
 open_status_name = False
+
+def checkos():
+	operating_system=(str(platform.node())).lower()
+	return operating_system
 
 def test_code(interactive_mode:bool):
 	if text.tag_ranges("sel"):
@@ -22,10 +28,17 @@ def test_code(interactive_mode:bool):
 
 	code=text.get(first,last)
 	open("testing-code.py", 'w').write(code) 
-	if interactive_mode:
-		command="start cmd /c \" python -i testing-code.py \""
-	else:
-		command = "start cmd /c \" python testing-code.py && echo. && pause || echo. && pause \""
+	os=checkos()
+	if os=='sunday':
+		if interactive_mode:
+			command="start cmd /c \" python -i testing-code.py \""
+		else:
+			command = "start cmd /c \" python testing-code.py && echo. && pause || echo. && pause \""
+	elif os=='kali':
+		if interactive_mode:
+			command='xfce4-terminal -e "python -i testing-code.py"'
+		else:
+			command='xfce4-terminal --hold -e "python testing-code.py"'
 	subprocess.run(command,shell=True) 
 
 def comment(e):
@@ -60,15 +73,43 @@ def run(interactive:bool):
 	save(False)
 	global open_status_name
 	if open_status_name:
-		if interactive:
-			command="start cmd /c \" python -i \""+open_status_name+"\" \""
-		else:
-			command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause || echo. && pause \""
+		os=checkos()
+		if os=="sunday":
+			if interactive:
+				command="start cmd /c \" python -i \""+open_status_name+"\" \""
+			else:
+				command="start cmd /c \" python \""+open_status_name+"\" && echo. && pause || echo. && pause \""
+		elif os=='kali':
+			if interactive:
+				command='xfce4-terminal -e "python -i '+open_status_name+'"'
+			else:
+				command='xfce4-terminal --hold -e "python '+open_status_name+'"'
 		subprocess.run(command,shell=True)
 
-def tab(arg):
+def tab(e=None):
     text.insert(INSERT, "    ")
     return 'break'
+
+def enter(e=None):
+	currentline = text.get(text.index(INSERT)+' linestart',INSERT)
+	# currentcode = currentline.split("#")[0].rstrip()
+	currentcode = currentline.split("#")[0]
+	toinsert='\n'
+	try:
+		if currentcode.rstrip()[-1]==':':
+			toinsert+="    "
+	except IndexError:
+		pass
+	current_leading_spaces=len(currentcode)-len(currentcode.lstrip())
+	toinsert+=" "*current_leading_spaces
+	text.insert(INSERT,toinsert)
+	return 'break'
+
+def duplicate(e=None):
+	cursorpos = text.index(INSERT)
+	line = "\n"+text.get(cursorpos+' linestart',cursorpos+' lineend')
+	text.insert(cursorpos+" lineend",line)
+	return 'break'
 
 def text_right_click(event):
 	try:
@@ -144,7 +185,7 @@ def paste():
 		teext = text.selection_get(selection='CLIPBOARD')
 		text.insert(INSERT, teext)
 	except:
-		tkMessageBox.showerror("Error","The clipboard is empty!")
+		pass
 
 def clear():
 	sel = text.get(SEL_FIRST, SEL_LAST)
@@ -169,10 +210,9 @@ def rem_syntax():
 		syntax_enabled=False
 	pass
 
-
 root = Tk()
 root.title("Test pad")
-root.iconbitmap("ide.ico")
+# root.iconbitmap("ide.ico")
 menu = Menu(root)
 
 filemenu = Menu(root,tearoff=0)
@@ -224,7 +264,8 @@ execmenu.add_command(label="Test Code",command=lambda: test_code(False))
 execmenu.add_command(label="Test interactive",command=lambda: test_code(True))
 
 # text = Text(root, height=30, width=60, font = ("Hurmit NF", 10),undo=True)
-text = Text(root, height=30, width=60, font = ("Consolas", 13),undo=True,padx=10,pady=10,wrap='none')
+# text = Text(root, height=30, width=60, font = ("Consolas", 13),undo=True,padx=10,pady=10,wrap='none')
+text = Text(root, height=30, width=60, font = ("Consolas", 13),undo=True,wrap='none')
 change_theme(theme_names[0])
 add_syntax()
 # dark_theme()
@@ -239,6 +280,8 @@ text.pack(side=LEFT, expand=True, fill=BOTH)
 text.bind("<Button-3>", text_right_click)
 text.bind('<Control-slash>',comment)
 text.bind("<Tab>", tab)
+text.bind("<Return>", enter)
+text.bind("<Control-d>", duplicate)
 
 root.protocol("WM_DELETE_WINDOW", kill)
 root.mainloop()
