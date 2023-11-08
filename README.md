@@ -62,3 +62,5 @@ Feel free to fork the repository and submit pull requests.
 ## License
 
 This project is licensed under the MIT License.
+
+### This is a test to check git configurations.
